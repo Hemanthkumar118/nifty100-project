@@ -1,0 +1,14 @@
+table,rows,status
+sqlite_sequence,0,FAIL
+analysis,20,PASS
+balancesheet,1312,PASS
+cashflow,1187,PASS
+companies,92,PASS
+documents,1585,PASS
+financial_ratios,1183,PASS
+market_cap,551,PASS
+peer_groups,55,PASS
+profitandloss,1276,PASS
+prosandcons,16,PASS
+sectors,91,PASS
+stock_prices,5519,PASS
