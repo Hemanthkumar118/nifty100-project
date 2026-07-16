@@ -1,0 +1,22 @@
+company_id,type,rule_id,text,confidence_pct
+1.0,PRO,1,Excellent ROE above 20%,95
+1.0,PRO,3,Healthy Net Profit Margin,90
+1.0,PRO,4,Strong Operating Margin,88
+1.0,PRO,5,Excellent Interest Coverage,90
+1.0,PRO,6,Positive Free Cash Flow,87
+1.0,PRO,7,Healthy Revenue CAGR,89
+1.0,PRO,8,Strong Profit Growth,91
+1.0,PRO,9,EPS Growing Rapidly,90
+1.0,PRO,10,Efficient capital structure,92
+1.0,CON,12,Revenue Growing Slower,80
+2.0,PRO,12,Revenue expanding consistently,82
+2.0,CON,1,High Debt,95
+2.0,CON,2,Low ROE,91
+2.0,CON,3,Weak Net Margin,88
+2.0,CON,4,Poor Operating Margin,89
+2.0,CON,5,Weak Interest Coverage,92
+2.0,CON,6,Negative Free Cash Flow,90
+2.0,CON,7,Slow Revenue Growth,84
+2.0,CON,8,Weak Profit CAGR,84
+2.0,CON,9,Weak EPS Growth,83
+2.0,CON,10,High Debt with Low ROE,95

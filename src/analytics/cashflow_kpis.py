@@ -1,87 +1,119 @@
-"""
-Sprint 2 - Day 11
-Cash Flow KPI Engine
-"""
+import pandas as pd
 
 
-def free_cash_flow(operating_activity, investing_activity):
-    """
-    FCF = Operating Cash Flow + Investing Cash Flow
-    Investing activity is usually negative.
-    """
-    return round(operating_activity + investing_activity, 2)
+def cashflow_intelligence(df):
 
+    results = []
 
-def cfo_quality_score(cfo, pat):
-    """
-    CFO / PAT
-    """
+    distress = []
 
-    if pat == 0:
-        return None, "PAT_ZERO"
+    for _, row in df.iterrows():
 
-    score = cfo / pat
+        company = row.get("company_id", "")
 
-    if score > 1:
-        label = "High Quality"
-    elif score >= 0.5:
-        label = "Moderate"
-    else:
-        label = "Accrual Risk"
+        sector = row.get("sector", "")
 
-    return round(score, 2), label
+        cfo = row.get("cash_from_operations", 0) or 0
 
+        pat = row.get("profit_after_tax", 0) or 0
 
-def capex_intensity(investing_activity, sales):
-    """
-    CapEx / Sales
-    """
+        cfi = row.get("cash_from_investing", 0) or 0
 
-    if sales == 0:
-        return None, "SALES_ZERO"
+        cff = row.get("cash_from_financing", 0) or 0
 
-    intensity = abs(investing_activity) / sales * 100
+        sales = row.get("sales", 1) or 1
 
-    if intensity < 3:
-        label = "Asset Light"
-    elif intensity <= 8:
-        label = "Moderate"
-    else:
-        label = "Capital Intensive"
+        fcf = row.get("free_cash_flow_cr", 0) or 0
 
-    return round(intensity, 2), label
+        # ---------------- CFO QUALITY ---------------- #
 
+        ratio = cfo / pat if pat != 0 else 0
 
-def fcf_conversion(fcf, operating_profit):
-    """
-    FCF / Operating Profit
-    """
+        if ratio >= 1:
+            quality = "High Quality"
 
-    if operating_profit == 0:
-        return None
+        elif ratio >= 0.5:
+            quality = "Moderate"
 
-    return round((fcf / operating_profit) * 100, 2)
+        else:
+            quality = "Accrual Risk"
 
+        # ---------------- CAPEX ---------------- #
 
-def capital_allocation_pattern(cfo, cfi, cff):
-    """
-    Determine company capital allocation pattern.
-    """
+        capex_pct = abs(cfi) / sales * 100
 
-    cfo_sign = "+" if cfo >= 0 else "-"
-    cfi_sign = "+" if cfi >= 0 else "-"
-    cff_sign = "+" if cff >= 0 else "-"
+        if capex_pct < 3:
+            capex_label = "Asset Light"
 
-    pattern = cfo_sign + cfi_sign + cff_sign
+        elif capex_pct < 8:
+            capex_label = "Moderate"
 
-    mapping = {
-        "+--": "Reinvestor",
-        "++-": "Liquidating Assets",
-        "-++": "Distress Signal",
-        "--+": "Growth Funded by Debt",
-        "+++": "Cash Accumulator",
-        "---": "Pre-Revenue",
-        "+-+": "Mixed",
-    }
+        else:
+            capex_label = "Capital Intensive"
 
-    return pattern, mapping.get(pattern, "Unknown")
+        # ---------------- DISTRESS ---------------- #
+
+        distress_flag = False
+
+        if cfo < 0 and cff > 0:
+            distress_flag = True
+
+        # ---------------- DELEVERAGING ---------------- #
+
+        deleveraging = False
+
+        if cff < 0:
+            deleveraging = True
+
+        # ---------------- CAPITAL ALLOCATION ---------------- #
+
+        if fcf > 0:
+            allocation = "Healthy"
+
+        elif distress_flag:
+            allocation = "Distress"
+
+        else:
+            allocation = "Neutral"
+
+        results.append({
+
+            "company_id": company,
+
+            "sector": sector,
+
+            "cfo_quality_score": round(ratio,2),
+
+            "cfo_quality_label": quality,
+
+            "capex_intensity_pct": round(capex_pct,2),
+
+            "capex_label": capex_label,
+
+            "fcf": fcf,
+
+            "distress_flag": distress_flag,
+
+            "deleveraging_flag": deleveraging,
+
+            "capital_allocation_label": allocation
+
+        })
+
+        if distress_flag:
+
+            distress.append({
+
+                "company_id": company,
+
+                "sector": sector,
+
+                "CFO": cfo,
+
+                "CFF": cff,
+
+                "PAT": pat
+
+            })
+
+    return pd.DataFrame(results), pd.DataFrame(distress)
