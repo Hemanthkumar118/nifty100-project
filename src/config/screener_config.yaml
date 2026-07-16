@@ -1,0 +1,12 @@
+quality_compounder:
+  roe_min: 15
+  debt_to_equity_max: 1
+  revenue_cagr_min: 10
+
+value_pick:
+  pe_max: 20
+  pb_max: 3
+
+growth:
+  pat_cagr_min: 20
+  revenue_cagr_min: 15
