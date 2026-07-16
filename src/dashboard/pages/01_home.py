@@ -1,5 +1,5 @@
 import streamlit as st
-from src.dashboard.utils.db import *
+from dashboard.utils.db import *
 
 st.title("🏠 Nifty100 Dashboard")
 

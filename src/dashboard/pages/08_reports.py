@@ -1,24 +1,32 @@
 import streamlit as st
-from src.dashboard.utils.db import *
 import os
 
-st.title("📄 Reports")
+st.title("📄 Company TearSheets")
 
-files = [
-    "output/load_audit.csv",
-    "output/validation_report.csv",
-    "output/peer_comparison.xlsx",
-    "output/valuation_summary.xlsx"
-]
+folder = "reports/tearsheets"
 
-available = []
+if os.path.exists(folder):
 
-for f in files:
-    if os.path.exists(f):
-        available.append(f)
+    pdfs = sorted([f for f in os.listdir(folder) if f.endswith(".pdf")])
 
-if len(available) == 0:
-    st.warning("No reports available.")
+    if pdfs:
+
+        pdf = st.selectbox(
+            "Select Company",
+            pdfs
+        )
+
+        with open(os.path.join(folder, pdf), "rb") as file:
+
+            st.download_button(
+                "Download TearSheet",
+                file,
+                pdf,
+                mime="application/pdf"
+            )
+
+    else:
+        st.warning("No PDF files found.")
+
 else:
-    st.success(f"{len(available)} report(s) found.")
-    st.write(available)
+    st.warning("TearSheet folder not found.")

@@ -1,5 +1,6 @@
 import streamlit as st
-from src.dashboard.utils.db import *
+
+from dashboard.utils.db import *
 
 st.title("💰 Market Capitalization")
 
